@@ -1,0 +1,2 @@
+cloudinary:
+  url: cloudinary://localhost:9999
