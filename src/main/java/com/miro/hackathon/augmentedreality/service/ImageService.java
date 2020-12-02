@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class ImageService {
         byte[] bytes = image.getBytes();
         String imageAsBase64 = Base64.getEncoder().encodeToString(bytes);
 
-        repository.save(new ImageEntity(boardId, imageAsBase64, Boolean.FALSE, LocalDateTime.now()));
+        repository.save(new ImageEntity(boardId, "SOME URL", Boolean.FALSE, LocalDateTime.now()));
     }
 
     public void markImageAsProcessed(Long imageId) {
@@ -28,5 +29,9 @@ public class ImageService {
         image.setProcessed(Boolean.TRUE);
 
         repository.save(image);
+    }
+
+    public List<ImageEntity> findAllUnprocessedImagesByBoard(Long boardId) {
+        return repository.findAllByBoardIdAndProcessedFalse(boardId);
     }
 }

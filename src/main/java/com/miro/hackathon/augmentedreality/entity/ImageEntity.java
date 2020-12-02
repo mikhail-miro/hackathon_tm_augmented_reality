@@ -19,14 +19,13 @@ public class ImageEntity {
     @GeneratedValue
     private Long id;
     private Long boardId;
-    @Column(length = 123123)
-    private String imageAsBase64;
+    private String imageUrl;
     private Boolean processed;
     private LocalDateTime createdAt;
 
-    public ImageEntity(Long boardId, String imageAsBase64, Boolean processed, LocalDateTime createdAt) {
+    public ImageEntity(Long boardId, String imageUrl, Boolean processed, LocalDateTime createdAt) {
         this.boardId = boardId;
-        this.imageAsBase64 = imageAsBase64;
+        this.imageUrl = imageUrl;
         this.processed = processed;
         this.createdAt = createdAt;
     }
