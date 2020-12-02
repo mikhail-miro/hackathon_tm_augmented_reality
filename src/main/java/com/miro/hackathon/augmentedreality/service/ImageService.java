@@ -16,19 +16,21 @@ import java.util.List;
 public class ImageService {
 
     private final ImageEntityRepository repository;
+    private final CloudinaryService cloudinaryService;
 
-    public void saveImage(Long boardId, MultipartFile image) throws IOException {
-        byte[] bytes = image.getBytes();
-        String imageAsBase64 = Base64.getEncoder().encodeToString(bytes);
+    public String saveImage(Long boardId, MultipartFile image) throws IOException {
+        String imageUrl = cloudinaryService.uploadImageToCloudinary(image);
+        ImageEntity entity = new ImageEntity(boardId, imageUrl, Boolean.FALSE, LocalDateTime.now());
+        repository.save(entity);
 
-        repository.save(new ImageEntity(boardId, "SOME URL", Boolean.FALSE, LocalDateTime.now()));
+        return imageUrl;
     }
 
     public void markImageAsProcessed(Long imageId) {
-        ImageEntity image = repository.findById(imageId).orElseThrow(() -> new RuntimeException("Image not found."));
-        image.setProcessed(Boolean.TRUE);
+        ImageEntity entity = repository.findById(imageId).orElseThrow(() -> new RuntimeException("Image not found."));
+        entity.setProcessed(Boolean.TRUE);
 
-        repository.save(image);
+        repository.save(entity);
     }
 
     public List<ImageEntity> findAllUnprocessedImagesByBoard(Long boardId) {

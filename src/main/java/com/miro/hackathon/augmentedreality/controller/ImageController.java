@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -30,8 +31,8 @@ public class ImageController {
 
     @PostMapping("/save")
     public ResponseEntity saveImage(@RequestParam("image") MultipartFile image, @RequestParam("boardId") Long boardId) throws IOException {
-        imageService.saveImage(boardId, image);
-        return ResponseEntity.ok().build();
+        String imageUrl = imageService.saveImage(boardId, image);
+        return ResponseEntity.created(URI.create(imageUrl)).build();
     }
 
     @PutMapping("{imageId}/mark")
