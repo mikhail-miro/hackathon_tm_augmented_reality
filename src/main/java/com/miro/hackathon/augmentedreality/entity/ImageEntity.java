@@ -21,11 +21,13 @@ public class ImageEntity {
     private Long boardId;
     @Column(length = 123123)
     private String imageAsBase64;
+    private Boolean processed;
     private LocalDateTime createdAt;
 
-    public ImageEntity(Long boardId, String imageAsBase64, LocalDateTime createdAt) {
+    public ImageEntity(Long boardId, String imageAsBase64, Boolean processed, LocalDateTime createdAt) {
         this.boardId = boardId;
         this.imageAsBase64 = imageAsBase64;
+        this.processed = processed;
         this.createdAt = createdAt;
     }
 }

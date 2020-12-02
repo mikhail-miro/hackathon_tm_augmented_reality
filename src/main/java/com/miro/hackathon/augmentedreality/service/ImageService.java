@@ -20,6 +20,13 @@ public class ImageService {
         byte[] bytes = image.getBytes();
         String imageAsBase64 = Base64.getEncoder().encodeToString(bytes);
 
-        repository.save(new ImageEntity(boardId, imageAsBase64, LocalDateTime.now()));
+        repository.save(new ImageEntity(boardId, imageAsBase64, Boolean.FALSE, LocalDateTime.now()));
+    }
+
+    public void markImageAsProcessed(Long imageId) {
+        ImageEntity image = repository.findById(imageId).orElseThrow(() -> new RuntimeException("Image not found."));
+        image.setProcessed(Boolean.TRUE);
+
+        repository.save(image);
     }
 }
