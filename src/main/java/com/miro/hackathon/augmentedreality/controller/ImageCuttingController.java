@@ -1,7 +1,6 @@
 package com.miro.hackathon.augmentedreality.controller;
 
 import com.miro.hackathon.augmentedreality.service.ProcessorService;
-import lombok.SneakyThrows;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ public class ImageCuttingController {
         this.processorService = processorService;
     }
 
-    @SneakyThrows
     @PostMapping("/api/image/cut")
     public ResponseEntity<Resource> removeBackground(@RequestParam("data") MultipartFile originalFile) {
 

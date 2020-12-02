@@ -1,2 +1,6 @@
 cloudinary:
   url: {CLOUDINARY_URL}
+
+spring.servlet.multipart:
+  max-file-size: 4096KB
+  max-request-size: 4096KB
