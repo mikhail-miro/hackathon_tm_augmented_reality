@@ -1,11 +1,18 @@
 package com.miro.hackathon.augmentedreality.utility;
 
+import org.springframework.core.io.InputStreamResource;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.awt.image.RGBImageFilter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class ImageUtils {
 
@@ -43,5 +50,12 @@ public class ImageUtils {
         g2.drawImage(mask, 0, 0, null);
         g2.dispose();
         return dest;
+    }
+
+    public static InputStreamResource convertToResource(BufferedImage scaledMask) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(scaledMask, "png", os);
+        InputStream is = new ByteArrayInputStream(os.toByteArray());
+        return new InputStreamResource(is);
     }
 }

@@ -14,8 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.miro.hackathon.augmentedreality.utility.ImageUtils.applyTransparency;
-import static com.miro.hackathon.augmentedreality.utility.ImageUtils.transformGrayToTransparency;
+import static com.miro.hackathon.augmentedreality.utility.ImageUtils.*;
 
 @Slf4j
 @Service
@@ -39,13 +38,4 @@ public class ImageProcessingService {
 
         return convertToResource(cleanedImage);
     }
-
-    private InputStreamResource convertToResource(BufferedImage scaledMask) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        ImageIO.write(scaledMask, "png", os);
-        InputStream is = new ByteArrayInputStream(os.toByteArray());
-        return new InputStreamResource(is);
-    }
-
-
 }
