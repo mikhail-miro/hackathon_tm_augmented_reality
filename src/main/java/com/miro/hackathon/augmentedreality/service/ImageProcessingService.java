@@ -20,11 +20,11 @@ import static com.miro.hackathon.augmentedreality.utility.ImageUtils.transformGr
 
 @Slf4j
 @Service
-public class ProcessorService {
+public class ImageProcessingService {
 
     private final BASNetService basNetService;
 
-    public ProcessorService(BASNetService basNetService) {
+    public ImageProcessingService(BASNetService basNetService) {
         this.basNetService = basNetService;
     }
 
