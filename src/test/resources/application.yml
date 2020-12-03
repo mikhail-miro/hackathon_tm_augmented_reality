@@ -1,2 +1,4 @@
 cloudinary:
   url: cloudinary://localhost:9999
+
+basnet.hostname: http://localhost:8888

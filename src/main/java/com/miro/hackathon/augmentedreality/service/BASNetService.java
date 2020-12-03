@@ -1,5 +1,7 @@
 package com.miro.hackathon.augmentedreality.service;
 
+import com.miro.hackathon.augmentedreality.config.BASNetConfig;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
@@ -11,29 +13,45 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.http.HttpClient;
+
+import static com.miro.hackathon.augmentedreality.utility.ImageUtils.createResizedCopy;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class BASNetService {
 
-    private final String BASNetHost = "http://u2net-predictor.tenant-compass.global.coreweave.com/";
-    //curl -v -X POST -F 'data=@/Users/mikhail/Downloads/IMG_6781.jpg' 'http://u2net-predictor.tenant-compass.global.coreweave.com/' -o mask.png
-
-    private final HttpClient client = HttpClient.newBuilder().build();
+    private final BASNetConfig basNetConfig;
 
     @SneakyThrows
-    public InputStream getMask(byte[] file) {
+    public BufferedImage getMask(byte[] file) {
+        byte[] mask = getMaskFromBasNet(file);
+        return scaleMask(new ByteArrayInputStream(file), new ByteArrayInputStream(mask));
+    }
+
+    private byte[] getMaskFromBasNet(byte[] file) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost uploadFile = new HttpPost(BASNetHost);
+        HttpPost uploadFile = new HttpPost(basNetConfig.getHostname());
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.addBinaryBody("data", file, ContentType.DEFAULT_BINARY, "data");
 
         HttpEntity multipart = builder.build();
         uploadFile.setEntity(multipart);
         CloseableHttpResponse response = httpClient.execute(uploadFile);
-        return response.getEntity().getContent();
+        return response.getEntity().getContent().readAllBytes();
+    }
+
+    @SneakyThrows
+    private BufferedImage scaleMask(InputStream original, InputStream mask) {
+        BufferedImage originalImage = ImageIO.read(original);
+        BufferedImage maskImage = ImageIO.read(mask);
+
+        return createResizedCopy(maskImage, originalImage.getWidth(), originalImage.getHeight(), true);
     }
 
 }

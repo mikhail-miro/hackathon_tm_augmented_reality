@@ -1,6 +1,8 @@
 cloudinary:
   url: {CLOUDINARY_URL}
 
+basnet.hostname: http://u2net-predictor.tenant-compass.global.coreweave.com/
+
 spring.servlet.multipart:
   max-file-size: 4096KB
   max-request-size: 4096KB
