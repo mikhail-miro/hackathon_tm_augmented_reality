@@ -6,6 +6,7 @@ import com.miro.hackathon.augmentedreality.service.ImageProcessingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +38,7 @@ public class ImageController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/cut")
+    @PostMapping(value = "/cut", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<Resource> removeBackground(@RequestParam("image") MultipartFile originalFile) {
 
         final Resource cleanedImage = imageProcessingService.removeBackground(originalFile);
