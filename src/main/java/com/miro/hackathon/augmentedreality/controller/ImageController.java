@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -25,12 +24,13 @@ public class ImageController {
     private final ImageService imageService;
 
     @GetMapping("/unprocessed")
-    public List<ImageEntity> findUnprocessedImages(@RequestParam("boardId") Long boardId) {
+    public List<ImageEntity> findUnprocessedImages(@RequestParam("boardId") String boardId) {
         return imageService.findAllUnprocessedImagesByBoard(boardId);
     }
 
+
     @PostMapping("/save")
-    public ResponseEntity saveImage(@RequestParam("image") MultipartFile image, @RequestParam("boardId") Long boardId) throws IOException {
+    public ResponseEntity saveImage(@RequestParam("image") MultipartFile image, @RequestParam("boardId") String boardId) {
         String imageUrl = imageService.saveImage(boardId, image);
         return ResponseEntity.created(URI.create(imageUrl)).build();
     }

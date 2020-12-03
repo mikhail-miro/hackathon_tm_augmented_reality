@@ -1,6 +1,5 @@
 package com.miro.hackathon.augmentedreality.service;
 
-
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
@@ -15,7 +14,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.miro.hackathon.augmentedreality.utility.ImageUtils.*;
+import static com.miro.hackathon.augmentedreality.utility.ImageUtils.applyTransparency;
+import static com.miro.hackathon.augmentedreality.utility.ImageUtils.createResizedCopy;
+import static com.miro.hackathon.augmentedreality.utility.ImageUtils.transformGrayToTransparency;
 
 @Slf4j
 @Service

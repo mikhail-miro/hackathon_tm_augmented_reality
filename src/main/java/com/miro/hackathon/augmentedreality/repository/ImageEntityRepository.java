@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface ImageEntityRepository extends CrudRepository<ImageEntity, Long> {
 
-    List<ImageEntity> findAllByBoardIdAndProcessedFalse(Long boardId);
+    List<ImageEntity> findAllByBoardIdAndProcessedFalse(String boardId);
 }

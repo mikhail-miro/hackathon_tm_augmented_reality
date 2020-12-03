@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,12 +17,12 @@ public class ImageEntity {
     @Id
     @GeneratedValue
     private Long id;
-    private Long boardId;
+    private String boardId;
     private String imageUrl;
     private Boolean processed;
     private LocalDateTime createdAt;
 
-    public ImageEntity(Long boardId, String imageUrl, Boolean processed, LocalDateTime createdAt) {
+    public ImageEntity(String boardId, String imageUrl, Boolean processed, LocalDateTime createdAt) {
         this.boardId = boardId;
         this.imageUrl = imageUrl;
         this.processed = processed;
