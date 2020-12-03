@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static com.miro.hackathon.augmentedreality.utility.ImageUtils.applyTransparency;
-import static com.miro.hackathon.augmentedreality.utility.ImageUtils.createResizedCopy;
 import static com.miro.hackathon.augmentedreality.utility.ImageUtils.transformGrayToTransparency;
 
 @Slf4j
@@ -30,11 +29,10 @@ public class ImageProcessingService {
 
     @SneakyThrows
     public Resource removeBackground(MultipartFile originalFile) {
-        log.info("Got file: {} size: {}", originalFile.getOriginalFilename(), originalFile.getSize());
+        log.info("Got file: {} for cutting with size: {}", originalFile.getOriginalFilename(), originalFile.getSize());
         final byte[] fileContent = originalFile.getInputStream().readAllBytes();
-        final byte[] mask = basNetService.getMask(fileContent).readAllBytes();
 
-        final BufferedImage scaledMask = scaleMask(new ByteArrayInputStream(fileContent), new ByteArrayInputStream(mask));
+        final BufferedImage scaledMask = basNetService.getMask(fileContent);
         final BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(fileContent));
 
         BufferedImage cleanedImage = applyTransparency(originalImage, transformGrayToTransparency(scaledMask));
@@ -47,14 +45,6 @@ public class ImageProcessingService {
         ImageIO.write(scaledMask, "png", os);
         InputStream is = new ByteArrayInputStream(os.toByteArray());
         return new InputStreamResource(is);
-    }
-
-    @SneakyThrows
-    private BufferedImage scaleMask(InputStream original, InputStream mask) {
-        BufferedImage originalImage = ImageIO.read(original);
-        BufferedImage maskImage = ImageIO.read(mask);
-
-        return createResizedCopy(maskImage, originalImage.getWidth(), originalImage.getHeight(), true);
     }
 
 
