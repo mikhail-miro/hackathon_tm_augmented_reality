@@ -18,9 +18,9 @@ public class ImageService {
     private final CloudinaryService cloudinaryService;
 
     @SneakyThrows
-    public String saveImage(String boardId, MultipartFile image) {
+    public String saveImage(String boardId, String userId, MultipartFile image) {
         String imageUrl = cloudinaryService.uploadImageToCloudinary(image);
-        ImageEntity entity = new ImageEntity(boardId, imageUrl, Boolean.FALSE, LocalDateTime.now());
+        ImageEntity entity = new ImageEntity(boardId, userId, imageUrl, Boolean.FALSE, LocalDateTime.now());
         repository.save(entity);
 
         return imageUrl;

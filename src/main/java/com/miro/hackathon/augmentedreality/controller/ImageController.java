@@ -30,8 +30,8 @@ public class ImageController {
 
 
     @PostMapping("/save")
-    public ResponseEntity saveImage(@RequestParam("image") MultipartFile image, @RequestParam("boardId") String boardId) {
-        String imageUrl = imageService.saveImage(boardId, image);
+    public ResponseEntity saveImage(@RequestParam("image") MultipartFile image, @RequestParam("boardId") String boardId, @RequestParam("userId") String userId) {
+        String imageUrl = imageService.saveImage(boardId, userId, image);
         return ResponseEntity.created(URI.create(imageUrl)).build();
     }
 

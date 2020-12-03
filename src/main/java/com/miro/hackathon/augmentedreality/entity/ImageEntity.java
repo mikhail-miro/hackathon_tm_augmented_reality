@@ -18,12 +18,14 @@ public class ImageEntity {
     @GeneratedValue
     private Long id;
     private String boardId;
+    private String userId;
     private String imageUrl;
     private Boolean processed;
     private LocalDateTime createdAt;
 
-    public ImageEntity(String boardId, String imageUrl, Boolean processed, LocalDateTime createdAt) {
+    public ImageEntity(String boardId, String userId, String imageUrl, Boolean processed, LocalDateTime createdAt) {
         this.boardId = boardId;
+        this.userId = userId;
         this.imageUrl = imageUrl;
         this.processed = processed;
         this.createdAt = createdAt;
