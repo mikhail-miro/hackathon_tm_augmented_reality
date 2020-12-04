@@ -6,3 +6,21 @@ basnet.hostname: http://u2net-predictor.tenant-compass.global.coreweave.com/
 spring.servlet.multipart:
   max-file-size: 4096KB
   max-request-size: 4096KB
+
+resilience4j.circuitbreaker:
+  instances:
+    basNet:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 3
+      slidingWindowType: TIME_BASED
+      minimumNumberOfCalls: 10
+      waitDurationInOpenState: 30s
+      failureRateThreshold: 10
+      eventConsumerBufferSize: 10
+
+resilience4j.bulkhead:
+  instances:
+    basNet:
+      maxWaitDuration: 500ms
+      maxConcurrentCalls: 20

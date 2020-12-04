@@ -1,6 +1,8 @@
 package com.miro.hackathon.augmentedreality.service;
 
 import com.miro.hackathon.augmentedreality.config.BASNetConfig;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +29,11 @@ import static com.miro.hackathon.augmentedreality.utility.ImageUtils.createResiz
 @RequiredArgsConstructor
 public class BASNetService {
 
+    private static final String BACKEND = "basNet";
     private final BASNetConfig basNetConfig;
 
-    @SneakyThrows
+    @CircuitBreaker(name = BACKEND, fallbackMethod = "fallback")
+    @Bulkhead(name = BACKEND, fallbackMethod = "fallback")
     public Optional<BufferedImage> getMask(byte[] file) {
         try {
             byte[] mask = getMaskFromBasNet(file);
@@ -40,12 +44,16 @@ public class BASNetService {
         return Optional.empty();
     }
 
+    public Optional<BufferedImage> fallback(byte[] file, Exception ex) {
+        log.warn("Fallback method was called.");
+        return Optional.empty();
+    }
+
     private byte[] getMaskFromBasNet(byte[] file) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost uploadFile = new HttpPost(basNetConfig.getHostname());
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.addBinaryBody("data", file, ContentType.DEFAULT_BINARY, "data");
-
         HttpEntity multipart = builder.build();
         uploadFile.setEntity(multipart);
         CloseableHttpResponse response = httpClient.execute(uploadFile);
