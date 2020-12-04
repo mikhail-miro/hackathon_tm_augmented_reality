@@ -4,11 +4,7 @@ import org.springframework.core.io.InputStreamResource;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
-import java.awt.image.ImageProducer;
-import java.awt.image.RGBImageFilter;
+import java.awt.image.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,7 +24,7 @@ public class ImageUtils {
         return scaledBI;
     }
 
-    public static Image transformGrayToTransparency(BufferedImage image) {
+    public static Image makeItTransparent(BufferedImage image) {
         ImageFilter filter = new RGBImageFilter() {
             public final int filterRGB(int x, int y, int rgb) {
                 return (rgb << 8) & 0xFF000000;
@@ -39,17 +35,15 @@ public class ImageUtils {
         return Toolkit.getDefaultToolkit().createImage(ip);
     }
 
-    public static BufferedImage applyTransparency(BufferedImage image, Image mask) {
-        BufferedImage dest = new BufferedImage(
-                image.getWidth(), image.getHeight(),
-                BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = dest.createGraphics();
+    public static BufferedImage applyMask(BufferedImage image, Image mask) {
+        BufferedImage resultImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resultImage.createGraphics();
         g2.drawImage(image, 0, 0, null);
         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.DST_IN, 1.0F);
         g2.setComposite(ac);
         g2.drawImage(mask, 0, 0, null);
         g2.dispose();
-        return dest;
+        return resultImage;
     }
 
     public static InputStreamResource convertToResource(BufferedImage scaledMask) throws IOException {

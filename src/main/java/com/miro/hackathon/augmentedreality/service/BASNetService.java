@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 import static com.miro.hackathon.augmentedreality.utility.ImageUtils.createResizedCopy;
 
@@ -29,9 +30,14 @@ public class BASNetService {
     private final BASNetConfig basNetConfig;
 
     @SneakyThrows
-    public BufferedImage getMask(byte[] file) {
-        byte[] mask = getMaskFromBasNet(file);
-        return scaleMask(new ByteArrayInputStream(file), new ByteArrayInputStream(mask));
+    public Optional<BufferedImage> getMask(byte[] file) {
+        try {
+            byte[] mask = getMaskFromBasNet(file);
+            return Optional.of(scaleMask(new ByteArrayInputStream(file), new ByteArrayInputStream(mask)));
+        } catch (IOException e) {
+            log.error("Cannot get mask for image from BASNet.", e);
+        }
+        return Optional.empty();
     }
 
     private byte[] getMaskFromBasNet(byte[] file) throws IOException {

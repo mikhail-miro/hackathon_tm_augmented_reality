@@ -2,7 +2,6 @@ package com.miro.hackathon.augmentedreality.service;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,9 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Optional;
 
 import static com.miro.hackathon.augmentedreality.utility.ImageUtils.*;
 
@@ -31,10 +28,10 @@ public class ImageProcessingService {
         log.info("Got file: {} for cutting with size: {}", originalFile.getOriginalFilename(), originalFile.getSize());
         final byte[] fileContent = originalFile.getInputStream().readAllBytes();
 
-        final BufferedImage scaledMask = basNetService.getMask(fileContent);
+        final Optional<BufferedImage> scaledMask = basNetService.getMask(fileContent);
         final BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(fileContent));
-
-        BufferedImage cleanedImage = applyTransparency(originalImage, transformGrayToTransparency(scaledMask));
+        BufferedImage cleanedImage = scaledMask.map(m -> applyMask(originalImage, makeItTransparent(m)))
+                .orElse(originalImage);
 
         return convertToResource(cleanedImage);
     }
