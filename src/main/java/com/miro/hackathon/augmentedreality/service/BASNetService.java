@@ -56,8 +56,10 @@ public class BASNetService {
         builder.addBinaryBody("data", file, ContentType.DEFAULT_BINARY, "data");
         HttpEntity multipart = builder.build();
         uploadFile.setEntity(multipart);
-        CloseableHttpResponse response = httpClient.execute(uploadFile);
-        return response.getEntity().getContent().readAllBytes();
+
+        try (CloseableHttpResponse response = httpClient.execute(uploadFile)) {
+            return response.getEntity().getContent().readAllBytes();
+        }
     }
 
     @SneakyThrows
